@@ -1,11 +1,11 @@
 import { withFormik } from "formik";
-import Router from "next/router";
 import * as yup from "yup";
 
 import InnerLoginForm from "../../components/auth/innerLoginForm";
 import { LoginFormValuesInterface } from "../../contracts/auth";
 import ValidationError from "../../exceptions/validationError";
 import callApi from "../../helpers/callApi";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
 
 const phoneRegExp = /^(0|0098|\+98)9(0[1-5]|[1 3]\d|2[0-2]|98)\d{7}$/
 
@@ -14,7 +14,8 @@ const loginFormValidationSchema = yup.object().shape({
 })
 
 interface LoginFormProps {
-    setToken : (token : string) => void
+    setToken : (token : string) => void,
+    router : AppRouterInstance
 }
 
 const LoginForm = withFormik<LoginFormProps , LoginFormValuesInterface>({
@@ -27,7 +28,7 @@ const LoginForm = withFormik<LoginFormProps , LoginFormValuesInterface>({
             const res = await callApi().post('/auth/login' , values)
             if(res.status === 200) {
                 props.setToken(res.data.token);
-                Router.push('/auth/login/step-two')
+                props.router.push('/auth/login/step-two')
             }
         } catch (error) {
             if(error instanceof ValidationError) {

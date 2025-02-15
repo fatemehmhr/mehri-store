@@ -1,7 +1,8 @@
-import type { NextPage } from 'next'
-import RegisterForm from '../../app/forms/auth/registerForm'
+'use client';
 
-const Register: NextPage = () => {
+import RegisterForm from '../../forms/auth/registerForm'
+
+const Register = () => {
     return (
         <>
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">

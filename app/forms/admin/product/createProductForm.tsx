@@ -1,5 +1,7 @@
+'use client';
+
 import { withFormik } from "formik";
-import Router from "next/router";
+import Router from "next/navigation";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import InnerProductForm from "../../../components/admin/products/innerProductForm";

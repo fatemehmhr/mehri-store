@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { useRouter } from "next/router";
+import { useRouter, usePathname } from "next/navigation";
 
 
 
@@ -23,9 +23,9 @@ interface Props {
 }
 
 export default function ActiveLink({ children , ...props } : Props) {
-    const { asPath } = useRouter();
+    const path = usePathname();
 
-    const active = asPath === props.href || asPath === props.as;
+    const active = path === props.href || path === props.as;
 
     return (
         <Link {...props}>

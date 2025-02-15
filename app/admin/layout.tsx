@@ -1,4 +1,6 @@
-import { useRouter } from "next/router"
+'use client';
+
+import { useRouter } from "next/navigation"
 import { ReactNode, Fragment, useState } from "react"
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
@@ -15,8 +17,7 @@ import {
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 
 import useAuth from "../hooks/useAuth"
-import SidebarLayout from "./admin/layouts/sidebarLayout"
-import User from "../models/user"
+import SidebarLayout from "../components/admin/layouts/sidebarLayout"
 
 
 const userNavigation = [
@@ -31,16 +32,13 @@ function classNames(...classes: string[]) {
 
 
 interface Props {
-    children: ReactNode,
-    permissions? : string
+    children: ReactNode
 }
 
-const AdminPanelLayout = ({ children , permissions }: Props) => {
+const AdminPanelLayout = ({ children }: Props) => {
     const router = useRouter();
-    const { user : userData , error, loading } = useAuth();
+    const { error, loading } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    const user = new User(userData);
 
     if (loading) return <h1>Loading ...</h1>
 
@@ -50,12 +48,6 @@ const AdminPanelLayout = ({ children , permissions }: Props) => {
         return <></>;
     }
 
-    if(permissions) {
-        if(! user.canAccess(permissions) ) {
-            router.push('/admin');
-            return <span>loading ...</span>
-        }
-    }
     
     // if(! user?.is_admin ) {
     //     router.push('/')

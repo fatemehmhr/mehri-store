@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Product from "../../../models/product";
 import { useState } from "react";
 import DeleteConfirmation from "../../shared/deleteConfimation";
@@ -49,7 +49,7 @@ export default function ProductListItem({ product , mutateProducts } : Props) {
     return (
             <tr>
                 <td className="hidden">
-                    {
+                    {/* {
                         `edit-product-${product.id}` in router.query &&  <Modal
                             setShow={() => router.push('/admin/products')}
                         >
@@ -59,7 +59,7 @@ export default function ProductListItem({ product , mutateProducts } : Props) {
                                 <EditProductForm product={product} mutateProducts={mutateProducts}/>
                             </div>
                         </Modal>
-                    }
+                    } */}
 
                     {
                         showDeleteConfirmation && 
@@ -79,12 +79,10 @@ export default function ProductListItem({ product , mutateProducts } : Props) {
                     <Link
                         href={`/admin/products?edit-product-${product.id}`}
                         as={`/admin/products/${product.id}/edit`}
+                        className="text-indigo-600 hover:text-indigo-900 ml-4"
                     >
-                        <a
-                            className="text-indigo-600 hover:text-indigo-900 ml-4"
-                        >
-                            ویرایش
-                        </a>
+                     
+                        ویرایش
                     </Link>
                     <button onClick={() => setShowDeleteConfirmation(true)} className="text-indigo-600 hover:text-indigo-900">
                         حذف

@@ -1,40 +1,28 @@
-import { useEffect, useState } from 'react';
-import AdminPanelLayout from "../../../app/components/adminPanelLayout";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { NextPageWithLayout } from "../../_app";
-import * as Yup from "yup";
-import { Form, Formik } from "formik";
-import Input from '../../../app/components/shared/form/input';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Modal from '../../../app/components/shared/modal';
-import CreateProductForm from '../../../app/forms/admin/product/createProductForm';
-import useSWR from 'swr';
-import { GetProducts } from '../../../app/services/product';
-import LoadingBox from '../../../app/components/shared/loadingBox';
-import Product from '../../../app/models/product';
-import { toast } from 'react-toastify';
-import ReactCustomPaginate from '../../../app/components/shared/reactCutsomPaginate';
-import EmptyList from '../../../app/components/shared/emptyList';
-import ProductListItem from '../../../app/components/admin/products/productListItem';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../app/store/auth';
+'use client';
 
-const ProductList: NextPageWithLayout = () => {
+
+import { useRouter , useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import Modal from '../../components/shared/modal';
+import CreateProductForm from '../../forms/admin/product/createProductForm';
+import useSWR from 'swr';
+import { GetProducts } from '../../services/product';
+import LoadingBox from '../../components/shared/loadingBox';
+import Product from '../../models/product';
+import ReactCustomPaginate from '../../components/shared/reactCutsomPaginate';
+import EmptyList from '../../components/shared/emptyList';
+import ProductListItem from '../../components/admin/products/productListItem';
+
+const ProductList = ({ params } : any) => {
     // const [showCreateProduct , setShowCreateProduct] = useState(false);
-    const [ page , setPage ] = useState(1);
-    const user = useSelector(selectUser);
 
     const router = useRouter();
-    const { page : queryPage } = router.query;
+    const serachParams = useSearchParams();
+    const page = serachParams?.get('page') ?? 1;
+
     const {data , error, mutate } = useSWR({ url : '/admin/products' , page } , GetProducts)
     const loadingProducts = !data && !error;
 
-
-    useEffect(() => {
-        setPage(parseInt(queryPage ?? 1))
-    }, [queryPage])
-    
     const setShowCreateProduct = (show = true) => {
         router.push(`/admin/products${show ? '?create-product' : ''}`);
     }
@@ -46,7 +34,7 @@ const ProductList: NextPageWithLayout = () => {
     return (
         <>
             {
-                user.canAccess('add_new_product') && 'create-product' in router.query &&  <Modal
+                serachParams?.has('create-product') && <Modal
                 setShow={() => setShowCreateProduct(false)}
             >
                 <div className="inline-block w-full max-w-3xl mt-8 mb-20 overflow-hidden text-right align-middle transition-all transform bg-white shadow-xl rounded-lg opacity-100 scale-100">
@@ -66,18 +54,15 @@ const ProductList: NextPageWithLayout = () => {
                         </p>
                     </div>
                     <div className="mt-4 sm:mt-0 sm:mr-16 sm:flex-none">
-                        {
-                            user.canAccess('add_new_product') && <Link
-                                href="/admin/products?create-product"
-                                as="/admin/products/create"
+                        <Link
+                            href="/admin/products/create"
+                        >
+                            <div
+                                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
                             >
-                                <a
-                                    className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
-                                >
-                                    اضافه کردن محصول
-                                </a>
-                            </Link>
-                        }
+                                اضافه کردن محصول
+                            </div>
+                        </Link>
                     </div>
                 </div>
                 <div className="mt-8 flex flex-col">
@@ -131,7 +116,5 @@ const ProductList: NextPageWithLayout = () => {
         </>
     )
 }
-
-ProductList.getLayout = (page) => <AdminPanelLayout>{page}</AdminPanelLayout>
 
 export default ProductList;

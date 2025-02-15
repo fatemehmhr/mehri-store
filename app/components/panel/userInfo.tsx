@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { removeLoginToken } from "../../helpers/auth";
 import { useAppSelector } from "../../hooks";
 import useAuth from "../../hooks/useAuth";

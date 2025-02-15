@@ -1,13 +1,14 @@
-import Router from 'next/router';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import GuestLayout from '../../../app/components/guestLayout';
-import PhoneVerifyForm from '../../../app/forms/auth/phoneVerifyForm'
-import { useAppDispatch, useAppSelector } from '../../../app/hooks'
-import { selectPhoneVerifyToken, updatePhoneVerifyToken } from '../../../app/store/auth';
-import { NextPageWithLayout } from '../../_app';
+import PhoneVerifyForm from '../../../forms/auth/phoneVerifyForm'
+import { useAppDispatch, useAppSelector } from '../../../hooks'
+import { selectPhoneVerifyToken, updatePhoneVerifyToken } from '../../../store/auth';
 
-const PhoneVerify : NextPageWithLayout = () => {
+const PhoneVerify = () => {
 
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const token = useAppSelector(selectPhoneVerifyToken);
 
@@ -16,13 +17,12 @@ const PhoneVerify : NextPageWithLayout = () => {
     }
 
     useEffect(() => {
-        Router.beforePopState(({ url, as, options }) => {
-            clearPhoneVerifyToken();
-            return true
-        })
-
         if(token === undefined) {
-            Router.push('/auth/login')
+            router.push('/auth/login')
+        }
+
+        return () => {
+            clearPhoneVerifyToken();
         }
     },[token]);
 
@@ -41,15 +41,13 @@ const PhoneVerify : NextPageWithLayout = () => {
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
 
-                        <PhoneVerifyForm token={token} clearToken={clearPhoneVerifyToken} />
+                        <PhoneVerifyForm token={token} clearToken={clearPhoneVerifyToken} router={router} />
                     </div>
                 </div>
             </div>
         </>
     )
 }
-
-PhoneVerify.getLayout = page => <GuestLayout>{page}</GuestLayout>
 
 
 export default PhoneVerify

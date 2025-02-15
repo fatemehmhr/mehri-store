@@ -1,16 +1,17 @@
-import GuestLayout from '../../../app/components/guestLayout'
-import { useAppDispatch } from '../../../app/hooks'
-import { updatePhoneVerifyToken } from '../../../app/store/auth'
-import { NextPageWithLayout } from '../../_app'
-import LoginForm from './../../../app/forms/auth/loginForm'
+'use client';
 
-const Login : NextPageWithLayout = () => {
+import { useAppDispatch } from '../../hooks'
+import { updatePhoneVerifyToken } from '../../store/auth'
+import LoginForm from '../../forms/auth/loginForm'
+import { useRouter } from 'next/navigation';
+
+const Login = () => {
     const dispatch = useAppDispatch();
+    const router = useRouter();
 
     const setPhoneVerifyToken = (token: string) => {
         dispatch(updatePhoneVerifyToken(token));
     }
-
 
     return (
         <>
@@ -26,14 +27,12 @@ const Login : NextPageWithLayout = () => {
 
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-                        <LoginForm setToken={setPhoneVerifyToken}/>
+                        <LoginForm setToken={setPhoneVerifyToken} router={router}/>
                     </div>
                 </div>
             </div>
         </>
     )
 }
-
-Login.getLayout = page => <GuestLayout>{page}</GuestLayout>
 
 export default Login

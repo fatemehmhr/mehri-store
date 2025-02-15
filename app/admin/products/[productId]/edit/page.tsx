@@ -1,26 +1,17 @@
-import { useState } from 'react';
-import AdminPanelLayout from "../../../../app/components/adminPanelLayout";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { NextPageWithLayout } from "../../../_app";
-import * as Yup from "yup";
-import { Form, Formik } from "formik";
-import Input from '../../../../app/components/shared/form/input';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Modal from '../../../../app/components/shared/modal';
-import CreateProductForm from '../../../../app/forms/admin/product/createProductForm';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
-import { GetSignleProduct } from '../../../../app/services/product';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import ValidationError from '../../../../app/exceptions/validationError';
-import { toast } from 'react-toastify';
-import EditProductForm from '../../../../app/forms/admin/product/editProductForm';
+import { GetSignleProduct } from '../../../../services/product';
+import ValidationError from '../../../../exceptions/validationError';
+import EditProductForm from '../../../../forms/admin/product/editProductForm';
+import CanAccess from '../../../../components/shared/canAccess';
 
 
-const ProductEdit: NextPageWithLayout = ({ productId } : InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const ProductEdit = ({ params }: any) => {
     const router = useRouter();
     // get the product with productId
-    const { data , error } = useSWR({ url : `/admin/products/${productId}/edit` , productId} , GetSignleProduct );
+    const { data , error } = useSWR({ url : `/admin/products/${params.productId}/edit` , productId : params.productId} , GetSignleProduct );
 
     const isLoading = !data && !error;
 
@@ -30,9 +21,8 @@ const ProductEdit: NextPageWithLayout = ({ productId } : InferGetServerSideProps
         return <></>;
     }
 
-
     return (
-        <>
+        <CanAccess permissions='edit_product'>
             <div className="px-4 sm:px-6 lg:px-8">
                 <div className="sm:flex sm:items-center">
                     <div className="sm:flex-auto">
@@ -53,19 +43,9 @@ const ProductEdit: NextPageWithLayout = ({ productId } : InferGetServerSideProps
                     </div>
                 </div>
             </div>
-        </>
+        </CanAccess>
     )
 }
 
-ProductEdit.getLayout = (page) => <AdminPanelLayout>{page}</AdminPanelLayout>
-
-export const getServerSideProps : GetServerSideProps = async ({ query }) => {
-
-    return {
-        props : {
-            productId : query?.productId
-        }
-    }
-}
 
 export default ProductEdit;

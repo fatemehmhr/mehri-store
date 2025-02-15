@@ -1,20 +1,7 @@
-import { useState } from 'react';
-import AdminPanelLayout from "../../../app/components/adminPanelLayout";
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid'
-import { NextPageWithLayout } from "../../_app";
-import * as Yup from "yup";
-import { Form, Formik } from "formik";
-import Input from '../../../app/components/shared/form/input';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Modal from '../../../app/components/shared/modal';
-import CreateProductForm from '../../../app/forms/admin/product/createProductForm';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../../app/store/auth';
-import { toast } from 'react-toastify';
+import CreateProductForm from '../../../forms/admin/product/createProductForm';
 
 
-const ProductCreate: NextPageWithLayout = () => {
+const ProductCreate = () => {
     return (
         <>
             <div className="px-4 sm:px-6 lg:px-8">
@@ -36,7 +23,5 @@ const ProductCreate: NextPageWithLayout = () => {
         </>
     )
 }
-
-ProductCreate.getLayout = (page) => <AdminPanelLayout permissions="add_new_product">{page}</AdminPanelLayout>
 
 export default ProductCreate;
